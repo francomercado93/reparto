@@ -11,6 +11,18 @@
 		<artifactId>arena-xtend-parent</artifactId>
 		<version>3.6.3</version>
 	</parent>
+	<dependencies>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.4.1.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.15</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
