@@ -30,5 +30,19 @@ abstract class RepoDefault<T> {
 			entityManager?.close
 		}
 	}
+	
+	def allInstances() {
+		val entityManager = this.entityManager
+		try {
+			val criteria = entityManager.criteriaBuilder
+			val query = criteria.createQuery(entityType)
+			val from = query.from(entityType)
+			query.select(from)
+			entityManager.createQuery(query).resultList
+		} finally {
+			entityManager?.close
+		}
+	}
+
 
 }

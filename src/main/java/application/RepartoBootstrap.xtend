@@ -8,6 +8,15 @@ import repos.RepoProductos
 
 class RepartoBootstrap {
 
+	static RepartoBootstrap instance
+
+	static def getInstance() {
+		if (instance === null) {
+			instance = new RepartoBootstrap()
+		}
+		instance
+	}
+
 	Cliente taka
 	Cliente sandwicheria
 	Producto miga
@@ -20,7 +29,8 @@ class RepartoBootstrap {
 	RepoProductos repoProductos
 	RepoClientes repoClientes
 
-	def void init() {
+	new() {
+		print("Inicio\n")
 		initRepos()
 		initClientes()
 		initProductos()
@@ -29,6 +39,18 @@ class RepartoBootstrap {
 	def initRepos() {
 		repoProductos = RepoProductos.instance
 		repoClientes = RepoClientes.instance
+	}
+
+	def crearProducto(Producto producto) {
+		repoProductos.create(producto)
+		print(producto.nombre + "creado correctamente")
+	}
+
+	def initClientes() {
+		taka = new Cliente("Taka pan")
+		sandwicheria = new Cliente("Sandwicheria")
+		this.crearCliente(taka)
+		this.crearCliente(sandwicheria)
 	}
 
 	def initProductos() {
@@ -48,19 +70,16 @@ class RepartoBootstrap {
 		this.crearProducto(pizza)
 	}
 
-	def crearProducto(Producto producto) {
-		repoProductos.create(producto)
-	}
-
-	def initClientes() {
-		taka = new Cliente("Taka pan")
-		sandwicheria = new Cliente("Sandwicheria")
-		this.crearCliente(taka)
-		this.crearCliente(sandwicheria)
-	}
-
 	def crearCliente(Cliente cliente) {
 		repoClientes.create(cliente)
+	}
+
+	def getClientes() {
+		repoClientes.allInstances()
+	}
+
+	def getProductos() {
+		repoProductos.allInstances()
 	}
 
 }
