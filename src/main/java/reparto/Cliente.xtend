@@ -36,12 +36,12 @@ class Cliente {
 		ganancias = newHashMap
 	}
 
-	def asignarGanancia(Producto producto, BigDecimal numero) {
-		ganancias.put(producto.id, numero)
+	def asignarGanancia(Long idProducto, BigDecimal numero) {
+		ganancias.put(idProducto, numero)
 	}
 
-	def getGananciaProducto(Producto producto) {
-		ganancias.get(producto)
+	def getGananciaProducto(Long idProducto) {
+		ganancias.get(idProducto)
 	}
 
 }

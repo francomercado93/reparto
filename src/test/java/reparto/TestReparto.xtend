@@ -26,25 +26,30 @@ class TestReparto {
 	@Before
 	def void init() {
 		miga = new Producto() => [
+			id = new Long(0)
 			nombre = "Pan de miga"
 			precioBase = new BigDecimal(160)
 		]
 
 		arabeBlanco = new Producto() => [
+			id = new Long(1)
 			nombre = "Arabe blanco"
 			precioBase = new BigDecimal(50)
 		]
 
 		panRallado = new Producto() => [
+			id = new Long(2)
 			nombre = "Pan rallado"
 			precioBase = new BigDecimal(80)
 		]
 
 		loDePepe = new Cliente() => [
+			id = new Long(10)
 			nombre = "Lo de Pepe"
 		]
 
 		laLibertad = new Cliente() => [
+			id = new Long(11)
 			nombre = "La libertad"
 		]
 
@@ -93,22 +98,30 @@ class TestReparto {
 	@Test
 	def void testAsignacionPrecioFinalDeUnProductoDeUnClienteYValorRecargoDelProductoDeUnCliente() {
 		val gananciaEsperada = new BigDecimal(40)
-		celdaMigaLoDePepe.setPrecioFinal(miga, new BigDecimal(200))
-		Assert.assertEquals(0, loDePepe.ganancias.get(miga).compareTo(gananciaEsperada), 0.1)
+		celdaMigaLoDePepe.setPrecioFinal(new BigDecimal(200))
+		Assert.assertEquals(0, loDePepe.ganancias.get(miga.id).compareTo(gananciaEsperada), 0.1)
+	}
+
+	@Test
+	def void testGetPrecioFinalProducto() {
+		val precioDeseado = new BigDecimal(200)
+		celdaMigaLoDePepe.setPrecioFinal(new BigDecimal(200))
+		Assert.assertEquals(0, celdaMigaLoDePepe.getPrecioFinal().compareTo(precioDeseado), 0.1)
 	}
 
 	@Test(expected=typeof(BusinessException))
 	def void precioFinalDeUnProductoDeUnClienteNoPuedeSerMenorOIgualAlPrecioBaseDelProducto() {
 		val precioNoValido = new BigDecimal(150)
-		celdaMigaLoDePepe.setPrecioFinal(miga, precioNoValido)
+		celdaMigaLoDePepe.setPrecioFinal(precioNoValido)
 	}
 
 	@Test
 	def void testPrecioFinalProducto() {
 		val precioMigaEsperado = new BigDecimal(200)
 		val precioArabeEsperado = new BigDecimal(60)
-		celdaMigaLoDePepe.setPrecioFinal(miga, new BigDecimal(200))
-		celdaArabeLoDePepe.setPrecioFinal(arabeBlanco, new BigDecimal(60))
+		celdaMigaLoDePepe.setPrecioFinal(new BigDecimal(200))
+		celdaArabeLoDePepe.setPrecioFinal(new BigDecimal(60))
+		print(celdaMigaLoDePepe.precioFinal)
 		Assert.assertEquals(0, celdaMigaLoDePepe.precioFinal.compareTo(precioMigaEsperado), 0.1)
 		Assert.assertEquals(0, celdaArabeLoDePepe.precioFinal.compareTo(precioArabeEsperado), 0.1)
 	}
@@ -118,8 +131,8 @@ class TestReparto {
 		val subtotalEsperado = new BigDecimal(260)
 		val precioMiga = new BigDecimal(200)
 		val precioArabe = new BigDecimal(60)
-		celdaMigaLoDePepe.setPrecioFinal(miga, precioMiga)
-		celdaArabeLoDePepe.setPrecioFinal(arabeBlanco, precioArabe)
+		celdaMigaLoDePepe.setPrecioFinal(precioMiga)
+		celdaArabeLoDePepe.setPrecioFinal(precioArabe)
 		Assert.assertEquals(0, filaLoDePepe.subtotal.compareTo(subtotalEsperado), 0.1)
 	}
 
@@ -128,8 +141,8 @@ class TestReparto {
 		val subtotalEsperado = new BigDecimal(50)
 		val precioMiga = new BigDecimal(200)
 		val precioArabe = new BigDecimal(60)
-		celdaMigaLoDePepe.setPrecioFinal(miga, precioMiga)
-		celdaArabeLoDePepe.setPrecioFinal(arabeBlanco, precioArabe)
+		celdaMigaLoDePepe.setPrecioFinal(precioMiga)
+		celdaArabeLoDePepe.setPrecioFinal(precioArabe)
 		Assert.assertEquals(0, filaLoDePepe.gananciaFila.compareTo(subtotalEsperado), 0.1)
 	}
 
@@ -141,11 +154,11 @@ class TestReparto {
 		val precioMigaLaLibertad = new BigDecimal(180)
 		val precioArabeLaLibertad = new BigDecimal(55)
 		val precioPanRalladoLaLibertad = new BigDecimal(100)
-		celdaMigaLoDePepe.setPrecioFinal(miga, precioMigaLoDePepe)
-		celdaArabeLoDePepe.setPrecioFinal(arabeBlanco, precioArabeLoDePepe)
-		celdaMigaLaLibertad.setPrecioFinal(miga, precioMigaLaLibertad)
-		celdaArabeLaLibertad.setPrecioFinal(arabeBlanco, precioArabeLaLibertad)
-		celdaPanRalladoLaLibertad.setPrecioFinal(panRallado, precioPanRalladoLaLibertad)
+		celdaMigaLoDePepe.setPrecioFinal(precioMigaLoDePepe)
+		celdaArabeLoDePepe.setPrecioFinal(precioArabeLoDePepe)
+		celdaMigaLaLibertad.setPrecioFinal(precioMigaLaLibertad)
+		celdaArabeLaLibertad.setPrecioFinal(precioArabeLaLibertad)
+		celdaPanRalladoLaLibertad.setPrecioFinal(precioPanRalladoLaLibertad)
 		Assert.assertEquals(0, planilla.total.compareTo(totalEsperado), 0.1)
 	}
 
@@ -157,11 +170,11 @@ class TestReparto {
 		val precioMigaLaLibertad = new BigDecimal(180)
 		val precioArabeLaLibertad = new BigDecimal(55)
 		val precioPanRalladoLaLibertad = new BigDecimal(100)
-		celdaMigaLoDePepe.setPrecioFinal(miga, precioMigaLoDePepe)
-		celdaArabeLoDePepe.setPrecioFinal(arabeBlanco, precioArabeLoDePepe)
-		celdaMigaLaLibertad.setPrecioFinal(miga, precioMigaLaLibertad)
-		celdaArabeLaLibertad.setPrecioFinal(arabeBlanco, precioArabeLaLibertad)
-		celdaPanRalladoLaLibertad.setPrecioFinal(panRallado, precioPanRalladoLaLibertad)
+		celdaMigaLoDePepe.setPrecioFinal(precioMigaLoDePepe)
+		celdaArabeLoDePepe.setPrecioFinal(precioArabeLoDePepe)
+		celdaMigaLaLibertad.setPrecioFinal(precioMigaLaLibertad)
+		celdaArabeLaLibertad.setPrecioFinal(precioArabeLaLibertad)
+		celdaPanRalladoLaLibertad.setPrecioFinal(precioPanRalladoLaLibertad)
 		print(planilla.gananciaPlanilla)
 		Assert.assertEquals(0, planilla.gananciaPlanilla.compareTo(gananciaEsperada), 0.1)
 	}

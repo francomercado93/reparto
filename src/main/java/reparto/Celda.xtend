@@ -10,19 +10,19 @@ class Celda {
 	Cliente cliente
 
 	def getPrecioFinal() {
-		producto.precioBase + cliente.getGananciaProducto(producto)
+		producto.precioBase + cliente.getGananciaProducto(producto.id)
 	}
 
-	def setPrecioFinal(Producto prod, BigDecimal valorFinal) {
+	def setPrecioFinal(BigDecimal valorFinal) {
 		val ganancia = valorFinal - producto.precioBase
 		if (ganancia.compareTo(new BigDecimal(0)) <= 0) {
-			throw new BusinessException("El precio final debe ser mayor a " + prod.precioBase)
+			throw new BusinessException("El precio final debe ser mayor a " + producto.precioBase)
 		}
-		cliente.asignarGanancia(producto, ganancia)
+		cliente.asignarGanancia(producto.id, ganancia)
 	}
-	
+
 	def getGanancia() {
-		cliente.getGananciaProducto(producto)
+		cliente.getGananciaProducto(producto.id)
 	}
-	
+
 }
