@@ -55,32 +55,27 @@ class TestReparto {
 
 		celdaMigaLoDePepe = new Celda() => [
 			producto = miga
-			cliente = loDePepe
 		]
 
 		celdaArabeLoDePepe = new Celda() => [
 			producto = arabeBlanco
-			cliente = loDePepe
 		]
 
 		celdaMigaLaLibertad = new Celda() => [
 			producto = miga
-			cliente = laLibertad
 		]
 
 		celdaArabeLaLibertad = new Celda() => [
 			producto = arabeBlanco
-			cliente = laLibertad
 		]
 		celdaPanRalladoLaLibertad = new Celda() => [
 			producto = panRallado
-			cliente = laLibertad
 		]
-		filaLaLibertad = new Fila()
+		filaLaLibertad = new Fila(laLibertad)
 		filaLaLibertad.agregarCelda(celdaMigaLaLibertad)
 		filaLaLibertad.agregarCelda(celdaArabeLaLibertad)
 		filaLaLibertad.agregarCelda(celdaPanRalladoLaLibertad)
-		filaLoDePepe = new Fila()
+		filaLoDePepe = new Fila(loDePepe)
 		filaLoDePepe.agregarCelda(celdaMigaLoDePepe)
 		filaLoDePepe.agregarCelda(celdaArabeLoDePepe)
 		val fechaPlanilla = LocalDate.of(2019, 07, 09)
@@ -98,32 +93,39 @@ class TestReparto {
 	@Test
 	def void testAsignacionPrecioFinalDeUnProductoDeUnClienteYValorRecargoDelProductoDeUnCliente() {
 		val gananciaEsperada = new BigDecimal(40)
-		celdaMigaLoDePepe.setPrecioFinal(new BigDecimal(200))
+		celdaMigaLoDePepe.setPrecioFinal(new BigDecimal(200), loDePepe)
 		Assert.assertEquals(0, loDePepe.ganancias.get(miga.id).compareTo(gananciaEsperada), 0.1)
 	}
 
 	@Test
 	def void testGetPrecioFinalProducto() {
 		val precioDeseado = new BigDecimal(200)
-		celdaMigaLoDePepe.setPrecioFinal(new BigDecimal(200))
-		Assert.assertEquals(0, celdaMigaLoDePepe.getPrecioFinal().compareTo(precioDeseado), 0.1)
+		celdaMigaLoDePepe.setPrecioFinal(new BigDecimal(200), loDePepe)
+		Assert.assertEquals(0, celdaMigaLoDePepe.getPrecioFinal(loDePepe).compareTo(precioDeseado), 0.1)
+	}
+	
+	@Test
+	def void testGetPrecioCelda() {
+		val precioDeseado = new BigDecimal(600)
+		celdaMigaLoDePepe.cantidad = new BigDecimal(3)
+		celdaMigaLoDePepe.setPrecioFinal(new BigDecimal(200), loDePepe)
+		Assert.assertEquals(0, celdaMigaLoDePepe.getPrecioCelda(loDePepe).compareTo(precioDeseado), 0.1)
 	}
 
 	@Test(expected=typeof(BusinessException))
 	def void precioFinalDeUnProductoDeUnClienteNoPuedeSerMenorOIgualAlPrecioBaseDelProducto() {
 		val precioNoValido = new BigDecimal(150)
-		celdaMigaLoDePepe.setPrecioFinal(precioNoValido)
+		celdaMigaLoDePepe.setPrecioFinal(precioNoValido, loDePepe)
 	}
 
 	@Test
 	def void testPrecioFinalProducto() {
 		val precioMigaEsperado = new BigDecimal(200)
 		val precioArabeEsperado = new BigDecimal(60)
-		celdaMigaLoDePepe.setPrecioFinal(new BigDecimal(200))
-		celdaArabeLoDePepe.setPrecioFinal(new BigDecimal(60))
-		print(celdaMigaLoDePepe.precioFinal)
-		Assert.assertEquals(0, celdaMigaLoDePepe.precioFinal.compareTo(precioMigaEsperado), 0.1)
-		Assert.assertEquals(0, celdaArabeLoDePepe.precioFinal.compareTo(precioArabeEsperado), 0.1)
+		celdaMigaLoDePepe.setPrecioFinal(new BigDecimal(200), loDePepe)
+		celdaArabeLoDePepe.setPrecioFinal(new BigDecimal(60), loDePepe)
+		Assert.assertEquals(0, celdaMigaLoDePepe.getPrecioFinal(loDePepe).compareTo(precioMigaEsperado), 0.1)
+		Assert.assertEquals(0, celdaArabeLoDePepe.getPrecioFinal(loDePepe).compareTo(precioArabeEsperado), 0.1)
 	}
 
 	@Test
@@ -131,8 +133,8 @@ class TestReparto {
 		val subtotalEsperado = new BigDecimal(260)
 		val precioMiga = new BigDecimal(200)
 		val precioArabe = new BigDecimal(60)
-		celdaMigaLoDePepe.setPrecioFinal(precioMiga)
-		celdaArabeLoDePepe.setPrecioFinal(precioArabe)
+		celdaMigaLoDePepe.setPrecioFinal(precioMiga, loDePepe)
+		celdaArabeLoDePepe.setPrecioFinal(precioArabe, loDePepe)
 		Assert.assertEquals(0, filaLoDePepe.subtotal.compareTo(subtotalEsperado), 0.1)
 	}
 
@@ -141,8 +143,8 @@ class TestReparto {
 		val subtotalEsperado = new BigDecimal(50)
 		val precioMiga = new BigDecimal(200)
 		val precioArabe = new BigDecimal(60)
-		celdaMigaLoDePepe.setPrecioFinal(precioMiga)
-		celdaArabeLoDePepe.setPrecioFinal(precioArabe)
+		celdaMigaLoDePepe.setPrecioFinal(precioMiga, loDePepe)
+		celdaArabeLoDePepe.setPrecioFinal(precioArabe, loDePepe)
 		Assert.assertEquals(0, filaLoDePepe.gananciaFila.compareTo(subtotalEsperado), 0.1)
 	}
 
@@ -154,11 +156,11 @@ class TestReparto {
 		val precioMigaLaLibertad = new BigDecimal(180)
 		val precioArabeLaLibertad = new BigDecimal(55)
 		val precioPanRalladoLaLibertad = new BigDecimal(100)
-		celdaMigaLoDePepe.setPrecioFinal(precioMigaLoDePepe)
-		celdaArabeLoDePepe.setPrecioFinal(precioArabeLoDePepe)
-		celdaMigaLaLibertad.setPrecioFinal(precioMigaLaLibertad)
-		celdaArabeLaLibertad.setPrecioFinal(precioArabeLaLibertad)
-		celdaPanRalladoLaLibertad.setPrecioFinal(precioPanRalladoLaLibertad)
+		celdaMigaLoDePepe.setPrecioFinal(precioMigaLoDePepe, loDePepe)
+		celdaArabeLoDePepe.setPrecioFinal(precioArabeLoDePepe, loDePepe)
+		celdaMigaLaLibertad.setPrecioFinal(precioMigaLaLibertad, laLibertad)
+		celdaArabeLaLibertad.setPrecioFinal(precioArabeLaLibertad, laLibertad)
+		celdaPanRalladoLaLibertad.setPrecioFinal(precioPanRalladoLaLibertad, laLibertad)
 		Assert.assertEquals(0, planilla.total.compareTo(totalEsperado), 0.1)
 	}
 
@@ -170,11 +172,11 @@ class TestReparto {
 		val precioMigaLaLibertad = new BigDecimal(180)
 		val precioArabeLaLibertad = new BigDecimal(55)
 		val precioPanRalladoLaLibertad = new BigDecimal(100)
-		celdaMigaLoDePepe.setPrecioFinal(precioMigaLoDePepe)
-		celdaArabeLoDePepe.setPrecioFinal(precioArabeLoDePepe)
-		celdaMigaLaLibertad.setPrecioFinal(precioMigaLaLibertad)
-		celdaArabeLaLibertad.setPrecioFinal(precioArabeLaLibertad)
-		celdaPanRalladoLaLibertad.setPrecioFinal(precioPanRalladoLaLibertad)
+		celdaMigaLoDePepe.setPrecioFinal(precioMigaLoDePepe, loDePepe)
+		celdaArabeLoDePepe.setPrecioFinal(precioArabeLoDePepe, loDePepe)
+		celdaMigaLaLibertad.setPrecioFinal(precioMigaLaLibertad, laLibertad)
+		celdaArabeLaLibertad.setPrecioFinal(precioArabeLaLibertad, laLibertad)
+		celdaPanRalladoLaLibertad.setPrecioFinal(precioPanRalladoLaLibertad, laLibertad)
 		print(planilla.gananciaPlanilla)
 		Assert.assertEquals(0, planilla.gananciaPlanilla.compareTo(gananciaEsperada), 0.1)
 	}

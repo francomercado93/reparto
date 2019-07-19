@@ -8,13 +8,19 @@ import java.math.BigDecimal
 class Fila {
 
 	List<Celda> celdas
+	Cliente cliente
 
 	new() {
 		celdas = newArrayList
 	}
 
+	new(Cliente _cliente) {
+		celdas = newArrayList
+		cliente = _cliente
+	}
+
 	def getSubtotal() {
-		new BigDecimal(celdas.fold(0d, [acum, celda|acum + celda.precioFinal]))
+		new BigDecimal(celdas.fold(0d, [acum, celda|acum + celda.getPrecioFinal(cliente)]))
 	}
 
 	def agregarCelda(Celda celda) {
@@ -22,7 +28,7 @@ class Fila {
 	}
 
 	def getGananciaFila() {
-		new BigDecimal(celdas.fold(0d, [acum, celda|acum + celda.ganancia]))
+		new BigDecimal(celdas.fold(0d, [acum, celda|acum + celda.getGanancia(cliente)]))
 	}
-	
+
 }
